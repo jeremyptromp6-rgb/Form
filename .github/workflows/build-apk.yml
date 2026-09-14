@@ -13,15 +13,24 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Unzip project
-        run: unzip -q form-android-project.zip
+        run: |
+          set -e
+          ls -la
+          if [ ! -f form-android-project.zip ]; then
+            echo "::error::form-android-project.zip not found in repo root. Files present:"
+            ls -la
+            exit 1
+          fi
+          unzip -o -q form-android-project.zip
+          ls -la form-android
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
